@@ -1,0 +1,41 @@
+import { Navigate, createBrowserRouter } from "react-router-dom";
+
+import DefaultLayout from "./components/layouts/DefaultLayout/DefaultLayout";
+import GuestLayout from "./components/layouts/GuestLayout/GuestLayout";
+
+import Inventario from "./views/Inventario/Inventario";
+import Mecanicos from "./views/Mecanicos/Mecanicos";
+import Login from "./views/Login/Login";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <DefaultLayout />,
+        children: [
+            {
+                path: "/",
+                element: <Navigate to="/inventario" />
+            },
+            {
+                path: "/inventario",
+                element: <Inventario />
+            },
+            {
+                path: "/mecanicos",
+                element: <Mecanicos />
+            }
+        ]
+    },
+    {
+        path: "/",
+        element: <GuestLayout />,
+        children: [
+            {
+                path: "/login",
+                element: <Login />
+            }
+        ]
+    }
+]);
+
+export default router;

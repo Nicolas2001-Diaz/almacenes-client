@@ -17,11 +17,11 @@ const router = createBrowserRouter([
                 element: <Navigate to="/inventario" />
             },
             {
-                path: "/inventario",
+                path: "inventario",
                 element: <Inventario />
             },
             {
-                path: "/mecanicos",
+                path: "mecanicos",
                 element: <Mecanicos />
             }
         ]

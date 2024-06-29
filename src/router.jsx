@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, createHashRouter } from "react-router-dom";
 
 import DefaultLayout from "./components/layouts/DefaultLayout/DefaultLayout";
 import GuestLayout from "./components/layouts/GuestLayout/GuestLayout";
@@ -7,7 +7,7 @@ import Inventario from "./views/Inventario/Inventario";
 import Mecanicos from "./views/Mecanicos/Mecanicos";
 import Login from "./views/Login/Login";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <DefaultLayout />,

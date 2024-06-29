@@ -15,7 +15,7 @@ import {useState} from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const pages = [
-  { name: "Inventario", to: "/inventario" },
+  { name: "Inventario", to: "/" },
   // { name: "Mecanicos", to: "/mecanicos" },
 ];
 

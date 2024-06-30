@@ -1,6 +1,5 @@
 import { AddCircleOutline, Delete, Edit } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
-import useScanDetection from "use-scan-detection-react18";
 import { Button } from "../../components/Controls";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
 import Modal from "../../components/Dialog/Dialog";
@@ -66,27 +65,17 @@ const Inventario = () => {
 
   const [rows, setRows] = useState([]);
 
-  const getInventario = async () => {
+  const getInventario = useCallback(async () => {
     await Axios.get(baseUrl + "inventario").then(
       ({ data }) => {
         setRows(data);
       }
     );
-  };
+  }, [baseUrl]);
 
   useEffect(() => {
     getInventario();
-  }, []);
-
-  const [barcodeScan, setBarcodeScan] = useState(
-    "No se ha escaneado ningún código"
-  );
-
-  useScanDetection({
-    onComplete: setBarcodeScan,
-    minLength: 3,
-    averageWaitTime: 10,
-  });
+  }, [getInventario]);
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -98,18 +87,9 @@ const Inventario = () => {
 
   const [recordForEdit, setRecordForEdit] = useState(null);
 
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
+  const handleCloseSnack = () => {
     setOpenSnack({ show: false, severity: "", message: "" });
   };
-
-  // const handleCloseModal = (resetForm) => {
-  //   resetForm();
-  //   setOpenModal(false);
-  // };
 
   const addOrEdit = async (product, resetForm) => {
     if (recordForEdit === null && product.id === 0) {
@@ -133,7 +113,7 @@ const Inventario = () => {
             message: "Producto guardado correctamente",
           });
         })
-        .catch((err) => {
+        .catch(() => {
           setOpenSnack({
             show: true,
             severity: "error",
@@ -161,7 +141,7 @@ const Inventario = () => {
             message: "Producto actualizado correctamente",
           });
         })
-        .catch((err) => {
+        .catch(() => {
           setOpenSnack({
             show: true,
             severity: "error",
@@ -187,7 +167,7 @@ const Inventario = () => {
           message: "Producto eliminado correctamente",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         setOpenSnack({
           show: true,
           severity: "error",
@@ -212,11 +192,9 @@ const Inventario = () => {
           />
         }
       >
-        <p>Barcode: {barcodeScan}</p>
-
         <CustomizedDataGrid columns={columns} rows={rows} />
 
-        <Modal open={openModal} setOpen={setOpenModal} title="Agregar Producto">
+        <Modal open={openModal} setOpen={setOpenModal} title={recordForEdit === null ? "Agregar Producto" : "Actualizar Producto"}>
           <InventarioForm addOrEdit={addOrEdit} recordForEdit={recordForEdit} />
         </Modal>
 

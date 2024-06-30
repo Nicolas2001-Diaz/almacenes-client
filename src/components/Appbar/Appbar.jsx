@@ -16,7 +16,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const pages = [
   { name: "Inventario", to: "/" },
-  // { name: "Mecanicos", to: "/mecanicos" },
+  { name: "Mecanicos", to: "/mecanicos" },
 ];
 
 const settings = ["Cerrar Sesión"];
@@ -59,7 +59,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component={Link}
-            to="/inventario"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -114,7 +114,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component={Link}
-            to="/inventario"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -145,7 +145,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Nicolas" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Nicol" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

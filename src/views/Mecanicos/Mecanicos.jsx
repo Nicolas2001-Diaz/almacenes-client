@@ -10,7 +10,7 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
 
 const Mecanicos = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
     { field: "nombre", headerName: "Nombre", width: 500 },

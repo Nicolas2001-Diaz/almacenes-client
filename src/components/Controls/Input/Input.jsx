@@ -8,19 +8,21 @@ const Input = ({
   type,
   options,
   select,
-  error=null,
-  disabled
+  error = null,
+  disabled,
+  ...other
 }) => {
   return (
     <TextField
-    disabled={disabled}
+      disabled={disabled}
       label={label}
       type={type}
       name={name}
       value={value}
       onChange={onChange}
       select={select}
-      {...(error && {error:true, helperText:error})}
+      {...(error && { error: true, helperText: error })}
+      {...other}
     >
       {options && <MenuItem value="0">Ninguna</MenuItem>}
 

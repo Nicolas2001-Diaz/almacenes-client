@@ -1,13 +1,14 @@
-import { Box, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Autocomplete, Box, Grid } from "@mui/material";
+import { useEffect, useState, useCallback } from "react";
 import useScanDetection from "use-scan-detection-react18";
 import { Button, Input } from "../../components/Controls";
 import { useForm } from "../../hooks/useForm";
+import Axios from "axios";
 
 const initialFvalues = {
   id: 0,
   nombre: "",
-  // marcaId: "",
+  proveedor: {},
   codigo: "",
   precio_compra: "",
   precio_venta: "",
@@ -15,6 +16,21 @@ const initialFvalues = {
 };
 
 const InventarioForm = ({ addOrEdit, recordForEdit }) => {
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
+
+  const [rows, setRows] = useState([]);
+
+  const getInventario = useCallback(async () => {
+    await Axios.get(baseUrl + "proveedores").then(({ data }) => {
+      setRows(data);
+    });
+  }, [baseUrl]);
+
+  useEffect(() => {
+    getInventario();
+  }, [getInventario]);
+
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
 
@@ -22,7 +38,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
       temp.nombre = fieldValues.nombre ? "" : "Este campo es obligatorio.";
     if ("codigo" in fieldValues)
       temp.codigo = fieldValues.codigo ? "" : "Este campo es obligatorio.";
-    if ("precio_Compra" in fieldValues)
+    if ("precio_compra" in fieldValues)
       temp.precio_compra =
         fieldValues.precio_compra.length > 2 ? "" : "Mínimo 3 números.";
     if ("precio_venta" in fieldValues)
@@ -30,6 +46,8 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
         fieldValues.precio_venta.length > 2 ? "" : "Mínimo 3 números.";
     if ("stock" in fieldValues)
       temp.stock = fieldValues.stock > 0 ? "" : "Mínimo 1 número.";
+    if ("proveedor" in fieldValues)
+      temp.proveedor = fieldValues.proveedor != 0 ? "" : "Este campo es obligatorio.";
 
     setErrors({
       ...temp,
@@ -41,14 +59,16 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
   const { values, errors, setValues, setErrors, handleInputChange, resetForm } =
     useForm(initialFvalues, true, validate);
 
+  const [proveedor, setProveedor] = useState(null);
+
   const [barcodeScan, setBarcodeScan] = useState(
-    "No se ha escaneado ningún código"
+    "asdsfdasfdsf"
   );
 
   useScanDetection({
-    onComplete: setBarcodeScan,
+    onComplete: {},
     minLength: 5,
-    averageWaitTime: 20
+    averageWaitTime: 20,
   });
 
   const handleClose = () => {
@@ -59,6 +79,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
     e.preventDefault();
 
     values.codigo = barcodeScan;
+    values.proveedor = proveedor ? proveedor.id : 0;
 
     if (validate()) {
       addOrEdit(values, resetForm);
@@ -73,8 +94,10 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
         ...recordForEdit,
         precio_compra: recordForEdit.precio_compra.toString(),
         precio_venta: recordForEdit.precio_venta.toString(),
-        stock: recordForEdit.stock.toString(),
+        stock: recordForEdit.stock.toString()
       });
+
+      setProveedor(recordForEdit.proveedor)
     }
   }, [recordForEdit, setValues]);
 
@@ -87,7 +110,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
       autoComplete="off"
     >
       <Grid container columnSpacing={{ md: 2 }}>
-      <Grid item xs={12}>
+        <Grid item xs={12}>
           <Input
             disabled
             label="Codigo"
@@ -96,8 +119,8 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
             error={errors.codigo}
           />
         </Grid>
-        
-        <Grid item xs={12}>
+
+        <Grid item xs={12} md={8}>
           <Input
             label="Nombre"
             name="nombre"
@@ -107,7 +130,22 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
             required
           />
         </Grid>
-        
+
+        <Grid item xs={12} md={4}>
+          <Autocomplete
+            options={rows}
+            getOptionLabel={(option) => option.nombre}
+            value={proveedor}
+            onChange={(event, newValue) => {
+              setProveedor(newValue);
+            }}
+            renderInput={(params) => (
+              <Input {...params} label="Proveedor" error={errors.proveedor}/>
+            )}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+          />
+        </Grid>
+
         <Grid item xs={12} md={5}>
           <Input
             label="Precio de compra"
@@ -118,6 +156,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
             error={errors.precio_compra}
           />
         </Grid>
+
         <Grid item xs={12} md={5}>
           <Input
             label="Precio de venta"
@@ -128,6 +167,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
             error={errors.precio_venta}
           />
         </Grid>
+
         <Grid item xs={12} md={2}>
           <Input
             label="stock"

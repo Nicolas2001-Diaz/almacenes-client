@@ -1,4 +1,9 @@
-import { AddCircleOutline, Delete, Edit } from "@mui/icons-material";
+import {
+  AddCircleOutline,
+  Delete,
+  Edit,
+  LocalShipping,
+} from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../../components/Controls";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
@@ -8,12 +13,21 @@ import InventarioForm from "./InventarioForm";
 import { Alert, Snackbar } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
+import ProveedoresForm from "./ProveedoresForm";
 
 const Inventario = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
-    { field: "nombre", headerName: "Nombre", width: 500 },
+    { field: "nombre", headerName: "Nombre", width: 400 },
+    {
+      field: "proveedor_nombre",
+      headerName: "Proveedor",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
+    },
     {
       field: "precio_compra",
       headerName: "Precio Compra",
@@ -41,7 +55,7 @@ const Inventario = () => {
       type: "actions",
       headerAlign: "center",
       align: "center",
-      width: 290,
+      width: 200,
       sortable: false,
       filterable: false,
       getActions: (params) => [
@@ -66,11 +80,9 @@ const Inventario = () => {
   const [rows, setRows] = useState([]);
 
   const getInventario = useCallback(async () => {
-    await Axios.get(baseUrl + "inventario").then(
-      ({ data }) => {
-        setRows(data);
-      }
-    );
+    await Axios.get(baseUrl + "inventario").then(({ data }) => {
+      setRows(data);
+    });
   }, [baseUrl]);
 
   useEffect(() => {
@@ -78,6 +90,7 @@ const Inventario = () => {
   }, [getInventario]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [openModalProv, setOpenModalProv] = useState(false);
 
   const [openSnack, setOpenSnack] = useState({
     show: false,
@@ -95,10 +108,11 @@ const Inventario = () => {
     if (recordForEdit === null && product.id === 0) {
       await Axios.post(baseUrl + "inventario", {
         nombre: product.nombre,
+        proveedor: product.proveedor,
         codigo: product.codigo,
         precio_compra: product.precio_compra,
         precio_venta: product.precio_venta,
-        stock: product.stock
+        stock: product.stock,
       })
         .then(() => {
           getInventario();
@@ -124,9 +138,10 @@ const Inventario = () => {
       await Axios.put(baseUrl + "inventario", {
         id: product.id,
         nombre: product.nombre,
+        proveedor: product.proveedor,
         precio_compra: product.precio_compra,
         precio_venta: product.precio_venta,
-        stock: product.stock
+        stock: product.stock,
       })
         .then(() => {
           getInventario();
@@ -152,6 +167,11 @@ const Inventario = () => {
   };
 
   const openInModal = (product) => {
+    product.proveedor = {
+      id: product.proveedor_id,
+      nombre: product.proveedor_nombre
+    }
+
     setRecordForEdit(product);
     setOpenModal(true);
   };
@@ -181,21 +201,45 @@ const Inventario = () => {
       <PageComponent
         title="Inventario"
         buttons={
-          <Button
-            text="Agregar"
-            color="secondary"
-            onClick={() => {
-              setOpenModal(true);
-              setRecordForEdit(null);
-            }}
-            startIcon={<AddCircleOutline />}
-          />
+          <>
+            <Button
+              text="Proveedores"
+              color="success"
+              onClick={() => {
+                setOpenModalProv(true);
+              }}
+              startIcon={<LocalShipping />}
+            />
+            <Button
+              text="Agregar Producto"
+              color="secondary"
+              onClick={() => {
+                setOpenModal(true);
+                setRecordForEdit(null);
+              }}
+              startIcon={<AddCircleOutline />}
+            />
+          </>
         }
       >
         <CustomizedDataGrid columns={columns} rows={rows} />
 
-        <Modal open={openModal} setOpen={setOpenModal} title={recordForEdit === null ? "Agregar Producto" : "Actualizar Producto"}>
+        <Modal
+          open={openModal}
+          setOpen={setOpenModal}
+          title={
+            recordForEdit === null ? "Agregar Producto" : "Actualizar Producto"
+          }
+        >
           <InventarioForm addOrEdit={addOrEdit} recordForEdit={recordForEdit} />
+        </Modal>
+
+        <Modal
+          open={openModalProv}
+          setOpen={setOpenModalProv}
+          title="Proveedores"
+        >
+          <ProveedoresForm />
         </Modal>
 
         <Snackbar

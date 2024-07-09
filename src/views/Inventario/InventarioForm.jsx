@@ -112,7 +112,6 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
       <Grid container columnSpacing={{ md: 2 }}>
         <Grid item xs={12}>
           <Input
-            disabled
             label="Codigo"
             name="codigo"
             value={barcodeScan}

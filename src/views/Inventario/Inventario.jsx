@@ -138,6 +138,7 @@ const Inventario = () => {
       await Axios.put(baseUrl + "inventario", {
         id: product.id,
         nombre: product.nombre,
+        codigo: product.codigo,
         proveedor: product.proveedor,
         precio_compra: product.precio_compra,
         precio_venta: product.precio_venta,

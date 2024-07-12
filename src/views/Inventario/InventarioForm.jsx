@@ -61,9 +61,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
 
   const [proveedor, setProveedor] = useState(null);
 
-  const [barcodeScan, setBarcodeScan] = useState(
-    ""
-  );
+  const [barcodeScan, setBarcodeScan] = useState("");
 
   useScanDetection({
     onComplete: {},
@@ -115,6 +113,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
             label="Codigo"
             name="codigo"
             value={barcodeScan}
+            onChange={(e) => setBarcodeScan(e.target.value)}
             error={errors.codigo}
           />
         </Grid>

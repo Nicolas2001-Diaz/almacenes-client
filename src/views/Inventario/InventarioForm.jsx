@@ -62,7 +62,7 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
   const [proveedor, setProveedor] = useState(null);
 
   const [barcodeScan, setBarcodeScan] = useState(
-    "asdsfdasfdsf"
+    ""
   );
 
   useScanDetection({

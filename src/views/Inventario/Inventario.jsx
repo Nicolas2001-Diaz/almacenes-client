@@ -78,14 +78,6 @@ const Inventario = () => {
     },
   ];
 
-  const [openModalSend, setOpenModalSend] = useState(false);
-
-  function sendProduct(codigo) {
-    
-    setOpenModalSend(true);
-    console.log(codigo)
-  }
-  
   useScanDetection({
     onComplete: (code) => {sendProduct(code)},
     minLength: 5,
@@ -106,12 +98,20 @@ const Inventario = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [openModalProv, setOpenModalProv] = useState(false);
-
+  const [openModalSend, setOpenModalSend] = useState(false);
+  
   const [openSnack, setOpenSnack] = useState({
     show: false,
     severity: "",
     message: "",
   });
+
+  function sendProduct(codigo) {
+    if(!openModal) {
+      setOpenModalSend(true);
+      console.log(codigo)
+    }
+  }
 
   const [recordForEdit, setRecordForEdit] = useState(null);
 

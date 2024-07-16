@@ -1,27 +1,20 @@
-import {
-  AddCircleOutline,
-  Delete,
-  Edit,
-  LocalShipping,
-} from "@mui/icons-material";
-import { useCallback, useEffect, useState } from "react";
-import { Button } from "../../components/Controls";
-import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
-import Modal from "../../components/Dialog/Dialog";
-import useScanDetection from "use-scan-detection-react18";
-import PageComponent from "../../components/PageComponent/PageComponent";
-import InventarioForm from "./InventarioForm";
+import { Delete, Edit } from "@mui/icons-material";
 import { Alert, Snackbar } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
-import ProveedoresForm from "./ProveedoresForm";
+import { useCallback, useEffect, useState } from "react";
+import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
+import Modal from "../../components/Dialog/Dialog";
+import PageComponent from "../../components/PageComponent/PageComponent";
+import ExportarHistorial from "./ExportarHistorial";
+import InventarioForm from "./InventarioForm";
 
-const Inventario = () => {
+const Historial = () => {
   const baseUrl =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
-    { field: "nombre", headerName: "Nombre", width: 400 },
+    { field: "producto_nombre", headerName: "Nombre", width: 400 },
     {
       field: "proveedor_nombre",
       headerName: "Proveedor",
@@ -30,25 +23,25 @@ const Inventario = () => {
       width: 200,
     },
     {
-      field: "precio_compra",
-      headerName: "Precio Compra",
-      headerAlign: "center",
-      align: "center",
-      width: 200,
-    },
-    {
-      field: "precio_venta",
-      headerName: "Precio Venta",
-      headerAlign: "center",
-      align: "center",
-      width: 200,
-    },
-    {
-      field: "stock",
+      field: "cantidad",
       headerName: "Cantidad",
       headerAlign: "center",
       align: "center",
       width: 100,
+    },
+    {
+      field: "total",
+      headerName: "Precio Total",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
+    },
+    {
+      field: "metodo_pago",
+      headerName: "Método Pago",
+      headerAlign: "center",
+      align: "center",
+      width: 200,
     },
     {
       field: "",
@@ -78,34 +71,19 @@ const Inventario = () => {
     },
   ];
 
-  const [openModalSend, setOpenModalSend] = useState(false);
-
-  function sendProduct(codigo) {
-    
-    setOpenModalSend(true);
-    console.log(codigo)
-  }
-  
-  useScanDetection({
-    onComplete: (code) => {sendProduct(code)},
-    minLength: 5,
-    averageWaitTime: 20,
-  });
-
   const [rows, setRows] = useState([]);
 
-  const getInventario = useCallback(async () => {
-    await Axios.get(baseUrl + "inventario").then(({ data }) => {
+  const getHistorial = useCallback(async () => {
+    await Axios.get(baseUrl + "historial").then(({ data }) => {
       setRows(data);
     });
   }, [baseUrl]);
 
   useEffect(() => {
-    getInventario();
-  }, [getInventario]);
+    getHistorial();
+  }, [getHistorial]);
 
   const [openModal, setOpenModal] = useState(false);
-  const [openModalProv, setOpenModalProv] = useState(false);
 
   const [openSnack, setOpenSnack] = useState({
     show: false,
@@ -130,7 +108,7 @@ const Inventario = () => {
         stock: product.stock,
       })
         .then(() => {
-          getInventario();
+          getHistorial();
 
           resetForm();
           setRecordForEdit(null);
@@ -160,7 +138,7 @@ const Inventario = () => {
         stock: product.stock,
       })
         .then(() => {
-          getInventario();
+          getHistorial();
 
           resetForm();
           setRecordForEdit(null);
@@ -185,8 +163,8 @@ const Inventario = () => {
   const openInModal = (product) => {
     product.proveedor = {
       id: product.proveedor_id,
-      nombre: product.proveedor_nombre
-    }
+      nombre: product.proveedor_nombre,
+    };
 
     setRecordForEdit(product);
     setOpenModal(true);
@@ -195,7 +173,7 @@ const Inventario = () => {
   const deleteProduct = async (id) => {
     await Axios.delete(`${baseUrl}inventario/${id}`)
       .then(() => {
-        getInventario();
+        getHistorial();
 
         setOpenSnack({
           show: true,
@@ -215,26 +193,10 @@ const Inventario = () => {
   return (
     <>
       <PageComponent
-        title="Inventario"
+        title="Historial"
         buttons={
           <>
-            <Button
-              text="Proveedores"
-              color="success"
-              onClick={() => {
-                setOpenModalProv(true);
-              }}
-              startIcon={<LocalShipping />}
-            />
-            <Button
-              text="Agregar Producto"
-              color="secondary"
-              onClick={() => {
-                setOpenModal(true);
-                setRecordForEdit(null);
-              }}
-              startIcon={<AddCircleOutline />}
-            />
+            <ExportarHistorial productos={rows} />
           </>
         }
       >
@@ -248,22 +210,6 @@ const Inventario = () => {
           }
         >
           <InventarioForm addOrEdit={addOrEdit} recordForEdit={recordForEdit} />
-        </Modal>
-
-        <Modal
-          open={openModalProv}
-          setOpen={setOpenModalProv}
-          title="Proveedores"
-        >
-          <ProveedoresForm />
-        </Modal>
-
-        <Modal
-          open={openModalSend}
-          setOpen={setOpenModalSend}
-          title="Registrar Venta"
-        >
-
         </Modal>
 
         <Snackbar
@@ -285,4 +231,4 @@ const Inventario = () => {
   );
 };
 
-export default Inventario;
+export default Historial;

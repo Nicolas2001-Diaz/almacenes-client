@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 const navigation = [
   { name: "Mecánicos", to: "/mecanicos" },
   { name: "Inventario", to: "/inventario" },
+  { name: "Historial", to: "/historial" },
 ];
 
 function classNames(...classes) {

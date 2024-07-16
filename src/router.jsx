@@ -5,6 +5,7 @@ import GuestLayout from "./components/layouts/GuestLayout/GuestLayout";
 
 import Inventario from "./views/Inventario/Inventario";
 import Mecanicos from "./views/Mecanicos/Mecanicos";
+import Historial from "./views/Historial/Historial";
 import Login from "./views/Login/Login";
 
 const router = createHashRouter([
@@ -23,6 +24,10 @@ const router = createHashRouter([
             {
                 path: "/mecanicos",
                 element: <Mecanicos />
+            },
+            {
+                path: "/historial",
+                element: <Historial />
             }
         ]
     },

@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router-dom";
 const pages = [
   { name: "Inventario", to: "/" },
   { name: "Mecanicos", to: "/mecanicos" },
+  { name: "Historial", to: "/historial" }
 ];
 
 const settings = ["Cerrar Sesión"];

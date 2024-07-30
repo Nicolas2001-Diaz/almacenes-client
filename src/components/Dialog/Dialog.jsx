@@ -12,7 +12,7 @@ export default function Modal({ open, setOpen, title, children }) {
       fullWidth={true}
       maxWidth="md"
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={() => setOpen()}
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">
@@ -22,7 +22,7 @@ export default function Modal({ open, setOpen, title, children }) {
         >
           <Grid item>{title}</Grid>
           <Grid item>
-            <IconButton color="error" onClick={() => setOpen(false)}>
+            <IconButton color="error" onClick={() => setOpen()}>
               <Close />
             </IconButton>
           </Grid>

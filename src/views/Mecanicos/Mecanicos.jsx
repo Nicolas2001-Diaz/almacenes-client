@@ -1,16 +1,19 @@
-import { AddCircleOutline, Delete, Edit } from "@mui/icons-material";
+import { AddCircleOutline, Delete, Edit, Sell } from "@mui/icons-material";
+import { Alert, Snackbar } from "@mui/material";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import Axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../../components/Controls";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
 import Modal from "../../components/Dialog/Dialog";
+import useScanDetection from "use-scan-detection-react18";
 import PageComponent from "../../components/PageComponent/PageComponent";
 import MecanicosForm from "./MecanicosForm";
-import { Alert, Snackbar } from "@mui/material";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import Axios from "axios";
+import VentaForm from "./VentaForm";
 
 const Mecanicos = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
     { field: "nombre", headerName: "Nombre", width: 500 },
@@ -63,14 +66,20 @@ const Mecanicos = () => {
     },
   ];
 
+  useScanDetection({
+    onComplete: (code) => {
+      sellProduct(code);
+    },
+    minLength: 5,
+    averageWaitTime: 20,
+  });
+
   const [rows, setRows] = useState([]);
 
   const getMecanicos = useCallback(async () => {
-    await Axios.get(baseUrl + "mecanicos").then(
-      ({ data }) => {
-        setRows(data);
-      }
-    );
+    await Axios.get(baseUrl + "mecanicos").then(({ data }) => {
+      setRows(data);
+    });
   }, [baseUrl]);
 
   useEffect(() => {
@@ -78,12 +87,20 @@ const Mecanicos = () => {
   }, [getMecanicos]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [openModalSell, setOpenModalSell] = useState(false);
 
   const [openSnack, setOpenSnack] = useState({
     show: false,
     severity: "",
     message: "",
   });
+
+  function sellProduct(codigo) {
+    if (!openModal) {
+      setOpenModalSell(true);
+      console.log(codigo);
+    }
+  }
 
   const [recordForEdit, setRecordForEdit] = useState(null);
 
@@ -97,7 +114,7 @@ const Mecanicos = () => {
         nombre: mecanico.nombre,
         documento: mecanico.documento,
         edad: mecanico.edad,
-        descuento: mecanico.descuento
+        descuento: mecanico.descuento,
       })
         .then(() => {
           getMecanicos();
@@ -125,7 +142,7 @@ const Mecanicos = () => {
         nombre: mecanico.nombre,
         documento: mecanico.documento,
         edad: mecanico.edad,
-        descuento: mecanico.descuento
+        descuento: mecanico.descuento,
       })
         .then(() => {
           getMecanicos();
@@ -178,24 +195,44 @@ const Mecanicos = () => {
   return (
     <>
       <PageComponent
+        maxWidth="xl"
         title="Mecánicos"
         buttons={
+          <>
           <Button
-            text="Agregar"
-            color="secondary"
-            onClick={() => {
-              setOpenModal(true);
-              setRecordForEdit(null);
-            }}
-            startIcon={<AddCircleOutline />}
-          />
+              text="Vender"
+              color="primary"
+              onClick={() => {
+                setOpenModalSell(true);
+              }}
+              startIcon={<Sell />}
+            />
+
+            <Button
+              text="Agregar"
+              color="secondary"
+              onClick={() => {
+                setOpenModal(true);
+                setRecordForEdit(null);
+              }}
+              startIcon={<AddCircleOutline />}
+            />
+          </>
         }
       >
         <CustomizedDataGrid columns={columns} rows={rows} />
 
-        <Modal open={openModal} setOpen={setOpenModal} title={recordForEdit === null ? "Agregar Mecánico" : "Actualizar Mecánico"}>
+        <Modal
+          open={openModal}
+          setOpen={() => setOpenModal(false)}
+          title={
+            recordForEdit === null ? "Agregar Mecánico" : "Actualizar Mecánico"
+          }
+        >
           <MecanicosForm addOrEdit={addOrEdit} recordForEdit={recordForEdit} />
         </Modal>
+
+        <VentaForm open={openModalSell} setOpen={setOpenModalSell} rows={rows}/>
 
         <Snackbar
           open={openSnack.show}
@@ -213,7 +250,7 @@ const Mecanicos = () => {
         </Snackbar>
       </PageComponent>
     </>
-  )
-}
+  );
+};
 
-export default Mecanicos
+export default Mecanicos;

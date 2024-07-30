@@ -1,18 +1,19 @@
 import { Container } from "@mui/material";
 import Header from "../Header/Header";
 
-const PageComponent = ({ title, buttons, children }) => {
+const PageComponent = ({ title, buttons, children, maxWidth, ...other }) => {
   return (
     <Container
-      maxWidth="xl"
+      maxWidth={maxWidth}
       sx={{
         display: "flex",
         flexDirection: "column",
         py: { xs: 8, sm: 10 },
         gap: 2,
       }}
+      {...other}
     >
-        <Header title={title} buttons={buttons} />
+      <Header title={title} buttons={buttons} />
 
       {children}
     </Container>

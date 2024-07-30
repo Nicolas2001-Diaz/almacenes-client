@@ -3,6 +3,7 @@ import {
   Delete,
   Edit,
   LocalShipping,
+  Sell,
 } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../../components/Controls";
@@ -15,6 +16,7 @@ import { Alert, Snackbar } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
 import ProveedoresForm from "./ProveedoresForm";
+import VentaForm from "./VentaForm";
 
 const Inventario = () => {
   const baseUrl =
@@ -79,7 +81,9 @@ const Inventario = () => {
   ];
 
   useScanDetection({
-    onComplete: (code) => {sendProduct(code)},
+    onComplete: (code) => {
+      sellProduct(code);
+    },
     minLength: 5,
     averageWaitTime: 20,
   });
@@ -98,18 +102,18 @@ const Inventario = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [openModalProv, setOpenModalProv] = useState(false);
-  const [openModalSend, setOpenModalSend] = useState(false);
-  
+  const [openModalSell, setOpenModalSell] = useState(false);
+
   const [openSnack, setOpenSnack] = useState({
     show: false,
     severity: "",
     message: "",
   });
 
-  function sendProduct(codigo) {
-    if(!openModal) {
-      setOpenModalSend(true);
-      console.log(codigo)
+  function sellProduct(codigo) {
+    if (!openModal) {
+      setOpenModalSell(true);
+      console.log(codigo);
     }
   }
 
@@ -185,8 +189,8 @@ const Inventario = () => {
   const openInModal = (product) => {
     product.proveedor = {
       id: product.proveedor_id,
-      nombre: product.proveedor_nombre
-    }
+      nombre: product.proveedor_nombre,
+    };
 
     setRecordForEdit(product);
     setOpenModal(true);
@@ -216,8 +220,18 @@ const Inventario = () => {
     <>
       <PageComponent
         title="Inventario"
+        maxWidth="xl"
         buttons={
           <>
+            <Button
+              text="Vender"
+              color="primary"
+              onClick={() => {
+                setOpenModalSell(true);
+              }}
+              startIcon={<Sell />}
+            />
+
             <Button
               text="Proveedores"
               color="success"
@@ -226,6 +240,7 @@ const Inventario = () => {
               }}
               startIcon={<LocalShipping />}
             />
+
             <Button
               text="Agregar Producto"
               color="secondary"
@@ -242,7 +257,7 @@ const Inventario = () => {
 
         <Modal
           open={openModal}
-          setOpen={setOpenModal}
+          setOpen={() => setOpenModal(false)}
           title={
             recordForEdit === null ? "Agregar Producto" : "Actualizar Producto"
           }
@@ -252,19 +267,13 @@ const Inventario = () => {
 
         <Modal
           open={openModalProv}
-          setOpen={setOpenModalProv}
+          setOpen={() => setOpenModalProv(false)}
           title="Proveedores"
         >
           <ProveedoresForm />
         </Modal>
 
-        <Modal
-          open={openModalSend}
-          setOpen={setOpenModalSend}
-          title="Registrar Venta"
-        >
-
-        </Modal>
+        <VentaForm open={openModalSell} setOpen={setOpenModalSell} getInventario={getInventario}/>
 
         <Snackbar
           open={openSnack.show}

@@ -24,7 +24,7 @@ const Input = ({
       {...(error && { error: true, helperText: error })}
       {...other}
     >
-      {options && <MenuItem value="0">Ninguna</MenuItem>}
+      {options && <MenuItem value="0"></MenuItem>}
 
       {options?.map((option) => (
         <MenuItem key={option.id} value={option.id}>

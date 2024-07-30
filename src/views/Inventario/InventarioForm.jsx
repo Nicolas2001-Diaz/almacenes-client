@@ -21,15 +21,15 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
 
   const [rows, setRows] = useState([]);
 
-  const getInventario = useCallback(async () => {
+  const getProveedores = useCallback(async () => {
     await Axios.get(baseUrl + "proveedores").then(({ data }) => {
       setRows(data);
     });
   }, [baseUrl]);
 
   useEffect(() => {
-    getInventario();
-  }, [getInventario]);
+    getProveedores();
+  }, [getProveedores]);
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };

@@ -17,6 +17,7 @@ const ExportarHistorial = ({ productos }) => {
         cantidad: data.cantidad,
         total: data.total,
         metodo: data.metodo_pago,
+        mecanico: data.mecanicos_nombre,
         fecha: data.fecha
       };
     });
@@ -25,7 +26,7 @@ const ExportarHistorial = ({ productos }) => {
     
     const hoja = XLSX.utils.json_to_sheet(listaProductos);
     
-    XLSX.utils.sheet_add_aoa(hoja, [["Nombre Producto", "Proveedor", "Cantidad", "Total", "Método Pago", "Fecha Venta"]], { origin: "A1" });
+    XLSX.utils.sheet_add_aoa(hoja, [["Nombre Producto", "Proveedor", "Cantidad", "Total", "Método Pago", "Mecánico", "Fecha Venta"]], { origin: "A1" });
     XLSX.utils.book_append_sheet(libro, hoja, "Historial");
 
     setTimeout(() => {

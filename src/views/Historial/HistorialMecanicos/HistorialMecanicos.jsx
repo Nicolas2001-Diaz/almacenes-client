@@ -85,8 +85,24 @@ const HistorialMecanicos = () => {
     setOpenSnack({ show: false, severity: "", message: "" });
   };
 
-  const returnSaleCliente = (id) => {
-    console.log(id)
+  const returnSaleCliente = async (id) => {
+    await Axios.delete(`${baseUrl}historial/${id}`)
+      .then(() => {
+        getHistorial();
+
+        setOpenSnack({
+          show: true,
+          severity: "success",
+          message: "Venta eliminada correctamente",
+        });
+      })
+      .catch(() => {
+        setOpenSnack({
+          show: true,
+          severity: "error",
+          message: "No se pudo eliminar la venta",
+        });
+      });
   };
 
   return (

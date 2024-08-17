@@ -8,7 +8,6 @@ import PageComponent from "../../../components/PageComponent/PageComponent";
 import ExportarHistorial from "./ExportarHistorial";
 
 const HistorialMecanicos = () => {
-  console.log("first")
   const baseUrl =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
@@ -19,28 +18,35 @@ const HistorialMecanicos = () => {
       headerName: "Proveedor",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 180,
     },
     {
       field: "cantidad",
       headerName: "Cantidad",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 80,
     },
     {
       field: "total",
       headerName: "Precio Total",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 100,
     },
     {
       field: "metodo_pago",
       headerName: "Método Pago",
       headerAlign: "center",
       align: "center",
-      width: 200,
+      width: 180,
+    },
+    {
+      field: "mecanicos_nombre",
+      headerName: "Mecánico",
+      headerAlign: "center",
+      align: "center",
+      width: 120,
     },
     {
       field: "",

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
-import { Button } from "../../../components/Controls";
+import { Button } from "../../components/Controls";
 import { FileDownload } from "@mui/icons-material";
 
 const ExportarInventario = ({ productos }) => {
@@ -11,9 +11,11 @@ const ExportarInventario = ({ productos }) => {
 
     let listaProductos = productos.map((data) => {
       return {
-        nombre: data.producto_nombre,
+        nombre: data.nombre,
         proveedor: data.proveedor_nombre,
-        cantidad: data.cantidad
+        precio_compra: data.precio_compra,
+        precio_venta: data.precio_venta,
+        cantidad: data.stock
       };
     });
     
@@ -21,11 +23,11 @@ const ExportarInventario = ({ productos }) => {
     
     const hoja = XLSX.utils.json_to_sheet(listaProductos);
     
-    XLSX.utils.sheet_add_aoa(hoja, [["Nombre Producto", "Proveedor", "Cantidad", "Total", "Método Pago", "Fecha Venta"]], { origin: "A1" });
+    XLSX.utils.sheet_add_aoa(hoja, [["Nombre Producto", "Proveedor", "Precio Compra", "Precio Venta", "Cantidad"]], { origin: "A1" });
     XLSX.utils.book_append_sheet(libro, hoja, "Historial");
 
     setTimeout(() => {
-      XLSX.writeFile(libro, "Historial-Clientes.xlsx");
+      XLSX.writeFile(libro, "Inventario.xlsx");
       
       setLoading(false);
     }, 1000);

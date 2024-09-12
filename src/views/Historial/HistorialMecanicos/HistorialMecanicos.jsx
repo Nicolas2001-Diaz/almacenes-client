@@ -151,7 +151,6 @@ const HistorialMecanicos = () => {
                     value={desde}
                     onChange={(newValue) => {
                       setDesde(newValue);
-                      getHistorial();
                     }}
                   />
                 </DemoContainer>
@@ -167,7 +166,6 @@ const HistorialMecanicos = () => {
                     value={hasta}
                     onChange={(newValue) => {
                       setHasta(newValue);
-                      getHistorial();
                     }}
                   />
                 </DemoContainer>

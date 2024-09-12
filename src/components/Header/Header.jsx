@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-export default function Header({title, buttons = ""}) {
+export default function Header({ title, buttons = "" }) {
   return (
     <Stack
       direction={{ xs: "column", md: "row" }}
@@ -16,8 +16,8 @@ export default function Header({title, buttons = ""}) {
           {title}
         </Typography>
       </Stack>
-      
-      <Stack direction="row" sx={{ gap: 1, width: { xs: "100%", sm: "auto" } }}>
+
+      <Stack direction={{ xs: 'column', sm: 'row'}} spacing={{ xs: 1, sm: 1, md: 4 }} sx={{ gap: 1, width: { xs: "100%", sm: "auto" } }}>
         {buttons}
       </Stack>
     </Stack>

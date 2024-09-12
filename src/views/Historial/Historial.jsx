@@ -4,6 +4,13 @@ import PageComponent from "../../components/PageComponent/PageComponent";
 import HistorialClientes from "./HistorialClientes/HistorialClientes";
 import HistorialMecanicos from "./HistorialMecanicos/HistorialMecanicos";
 
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
+  };
+}
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -11,20 +18,13 @@ function TabPanel(props) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && <Box>{children}</Box>}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
-}
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
 }
 
 const Historial = () => {
@@ -47,24 +47,17 @@ const Historial = () => {
   return (
     <>
       <PageComponent title="Historial" maxWidth="xl">
-        <Box
-          sx={{
-            flexGrow: 1,
-            bgcolor: "background.paper",
-            display: "flex",
-          }}
-        >
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={value}
-            onChange={handleChange}
-            sx={{ borderRight: 1, borderColor: "divider" }}
-          >
-            <Tab label="Clientes" {...a11yProps(0)} />
-            <Tab label="Mecánicos" {...a11yProps(1)} />
-          </Tabs>
-
+        <Box sx={{ width: '100%' }}>
+          <Box>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+            >
+              <Tab label="Clientes" {...a11yProps(0)} />
+              <Tab label="Mecánicos" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
+          
           <TabPanel value={value} index={0}>
             <HistorialClientes />
           </TabPanel>

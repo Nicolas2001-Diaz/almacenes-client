@@ -24,7 +24,7 @@ const Inventario = () => {
     import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
-    { field: "nombre", headerName: "Nombre", width: 400 },
+    { field: "nombre", headerName: "Nombre", width: 320 },
     {
       field: "proveedor_nombre",
       headerName: "Proveedor",
@@ -225,7 +225,7 @@ const Inventario = () => {
         buttons={
           <>
             <ExportarInventario productos={rows} />
-            
+
             <Button
               text="Vender"
               color="primary"
@@ -276,7 +276,7 @@ const Inventario = () => {
           <ProveedoresForm />
         </Modal>
 
-        <VentaForm open={openModalSell} setOpen={setOpenModalSell} getInventario={getInventario}/>
+        <VentaForm open={openModalSell} setOpen={setOpenModalSell} getInventario={getInventario} />
 
         <Snackbar
           open={openSnack.show}

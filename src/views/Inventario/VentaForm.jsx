@@ -1,7 +1,7 @@
 import { Search, SearchOff } from "@mui/icons-material";
 import { Box, Grid, IconButton } from "@mui/material";
 import Axios from "axios";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useScanDetection from "use-scan-detection-react18";
 import { Button, Input } from "../../components/Controls";
 import Modal from "../../components/Dialog/Dialog";
@@ -66,7 +66,8 @@ const VentaForm = ({ open, setOpen, getInventario }) => {
     resetForm();
   };
 
-  const handleSearch = async () => {
+
+  const handleSearch = useCallback(async () => {
     if (barcodeScan != "") {
       await Axios.get(`${baseUrl}inventario/${barcodeScan}`).then(
         ({ data }) => {
@@ -87,7 +88,11 @@ const VentaForm = ({ open, setOpen, getInventario }) => {
         }
       );
     }
-  };
+  }, [barcodeScan, baseUrl, setValues]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [barcodeScan, handleSearch])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -17,6 +17,7 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
 import ProveedoresForm from "./ProveedoresForm";
 import VentaForm from "./VentaForm";
+import ExportarInventario from "./ExportarInventario";
 
 const Inventario = () => {
   const baseUrl =
@@ -223,6 +224,8 @@ const Inventario = () => {
         maxWidth="xl"
         buttons={
           <>
+            <ExportarInventario productos={rows} />
+            
             <Button
               text="Vender"
               color="primary"

@@ -144,7 +144,6 @@ const HistorialClientes = () => {
                     value={desde}
                     onChange={(newValue) => {
                       setDesde(newValue);
-                      getHistorial();
                     }}
                   />
                 </DemoContainer>
@@ -160,7 +159,6 @@ const HistorialClientes = () => {
                     value={hasta}
                     onChange={(newValue) => {
                       setHasta(newValue);
-                      getHistorial();
                     }}
                   />
                 </DemoContainer>

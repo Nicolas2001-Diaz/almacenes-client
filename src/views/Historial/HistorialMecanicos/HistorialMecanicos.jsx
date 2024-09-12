@@ -1,52 +1,63 @@
 import { Replay } from "@mui/icons-material";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import Axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import CustomizedDataGrid from "../../../components/CustomizedDataGrid/CustomizedDataGrid";
 import PageComponent from "../../../components/PageComponent/PageComponent";
 import ExportarHistorial from "./ExportarHistorial";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const HistorialMecanicos = () => {
   const baseUrl =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/";
 
   const columns = [
-    { field: "producto_nombre", headerName: "Nombre", width: 300 },
+    { field: "producto_nombre", headerName: "Nombre", width: 280 },
     {
       field: "proveedor_nombre",
       headerName: "Proveedor",
       headerAlign: "center",
       align: "center",
-      width: 180,
+      width: 150,
     },
     {
       field: "cantidad",
       headerName: "Cantidad",
       headerAlign: "center",
       align: "center",
-      width: 80,
+      width: 130,
     },
     {
       field: "total",
       headerName: "Precio Total",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 110,
     },
     {
       field: "metodo_pago",
       headerName: "Método Pago",
       headerAlign: "center",
       align: "center",
-      width: 180,
+      width: 110,
     },
     {
       field: "mecanicos_nombre",
       headerName: "Mecánico",
       headerAlign: "center",
       align: "center",
-      width: 120,
+      width: 110,
+    },
+    {
+      field: "fecha",
+      headerName: "Fecha",
+      headerAlign: "center",
+      align: "center",
+      width: 110,
     },
     {
       field: "",
@@ -54,7 +65,7 @@ const HistorialMecanicos = () => {
       type: "actions",
       headerAlign: "center",
       align: "center",
-      width: 100,
+      width: 110,
       sortable: false,
       filterable: false,
       getActions: (params) => [
@@ -69,13 +80,25 @@ const HistorialMecanicos = () => {
     },
   ];
 
+  const [desde, setDesde] = useState(null)
+  const [hasta, setHasta] = useState(null)
+
   const [rows, setRows] = useState([]);
 
   const getHistorial = useCallback(async () => {
-    await Axios.get(baseUrl + "historial/mecanicos").then(({ data }) => {
+    const params = {};
+
+    if (desde) {
+      params.desde = desde.format('YYYY-MM-DD');
+    }
+    if (hasta) {
+      params.hasta = hasta.format('YYYY-MM-DD');
+    }
+
+    await Axios.get(baseUrl + "historial/mecanicos", { params }).then(({ data }) => {
       setRows(data);
     });
-  }, [baseUrl]);
+  }, [baseUrl, desde, hasta]);
 
   useEffect(() => {
     getHistorial();
@@ -115,15 +138,47 @@ const HistorialMecanicos = () => {
     <>
       <PageComponent
         maxWidth="xl"
-        sx={{ p: -8 }}
+        sx={{ py: -8, ml: -6 }}
         title="Mecánicos"
         buttons={
           <>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography>Desde:</Typography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    slotProps={{ textField: { size: 'small' } }}
+                    value={desde}
+                    onChange={(newValue) => {
+                      setDesde(newValue);
+                      getHistorial();
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography>Hasta:</Typography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    slotProps={{ textField: { size: 'small' } }}
+                    value={hasta}
+                    onChange={(newValue) => {
+                      setHasta(newValue);
+                      getHistorial();
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </Box>
+
             <ExportarHistorial productos={rows} />
           </>
         }
       >
-        <CustomizedDataGrid columns={columns} rows={rows} />
+        <CustomizedDataGrid columns={columns} rows={rows} sx={{ mt: 2 }} />
 
         <Snackbar
           open={openSnack.show}

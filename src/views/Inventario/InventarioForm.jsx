@@ -44,8 +44,6 @@ const InventarioForm = ({ addOrEdit, recordForEdit }) => {
     if ("precio_venta" in fieldValues)
       temp.precio_venta =
         fieldValues.precio_venta.length > 2 ? "" : "Mínimo 3 números.";
-    if ("stock" in fieldValues)
-      temp.stock = fieldValues.stock > 0 ? "" : "Mínimo 1 número.";
     if ("proveedor" in fieldValues)
       temp.proveedor = fieldValues.proveedor != 0 ? "" : "Este campo es obligatorio.";
 

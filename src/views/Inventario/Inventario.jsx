@@ -61,7 +61,6 @@ const Inventario = () => {
       align: "center",
       width: 200,
       sortable: false,
-      filterable: false,
       getActions: (params) => [
         <GridActionsCellItem
           key={params.id}
